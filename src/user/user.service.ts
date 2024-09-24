@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user.schema';
@@ -19,11 +19,16 @@ export class UserService {
     return user;
   }
 
-  create(createUserDto: CreateUserDto) {
-    const createdUser = new this.userModel(createUserDto);
-    return createdUser.save();
+  async create(createUserDto: CreateUserDto) {
+    try {
+      const createdUser = new this.userModel(createUserDto);
+      return await createdUser.save();
+    } catch (error) {
+      if (error.code === 11000) {
+        throw new ConflictException('A user already exists with this email');
+      }
+    }
   }
-
   update(id: string, createUserDto: UpdateUserDto) {
     const updatedUser = this.userModel.findByIdAndUpdate(id, createUserDto, {
       new: true,
