@@ -14,8 +14,11 @@ export class UserService {
     return await this.userModel.find().exec();
   }
 
-  async findOneByEmail(email: string): Promise<UserDocument> {
-    const user = await this.userModel.findOne({ email }).exec();
+  async findOneByEmail(
+    email: string,
+    select?: string | string[],
+  ): Promise<UserDocument> {
+    const user = await this.userModel.findOne({ email }).select(select).exec();
     validateDocumentExists(this.userModel, user);
     return user;
   }

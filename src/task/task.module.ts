@@ -7,8 +7,8 @@ import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
-    UserModule,
     MongooseModule.forFeature([{ name: Task.name, schema: TaskSchema }]),
+    UserModule,
   ],
   controllers: [TaskController],
   providers: [TaskService],

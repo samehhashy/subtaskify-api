@@ -5,6 +5,8 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
 import { Request } from 'express';
 import { User } from 'src/user/user.schema';
+import { AccessTokenDto } from './dto/access-token.dto';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -12,9 +14,17 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
+  @Post('register')
+  async register(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<AccessTokenDto> {
+    return await this.authService.register(createUserDto);
+  }
+
+  @Public()
   @Post('login')
-  async signIn(@Body() loginDto: LoginDto): Promise<{ accessToken: string }> {
-    return await this.authService.signIn(loginDto);
+  async signIn(@Body() loginDto: LoginDto): Promise<AccessTokenDto> {
+    return await this.authService.login(loginDto);
   }
 
   @ApiBearerAuth()
