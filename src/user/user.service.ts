@@ -20,7 +20,7 @@ export class UserService {
     return user;
   }
 
-  async findOne(id: string): Promise<UserDocument> {
+  async findById(id: string): Promise<UserDocument> {
     const user = await this.userModel.findById(id).exec();
     validateDocumentExists(this.userModel, user);
     return user;

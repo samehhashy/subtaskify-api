@@ -16,7 +16,7 @@ export class TaskService {
   ) {}
 
   private async validateUser(userId: string): Promise<void> {
-    await this.userService.findOne(userId);
+    await this.userService.findById(userId);
   }
 
   private async findOne(id: string): Promise<TaskDocument> {

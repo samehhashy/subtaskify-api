@@ -10,7 +10,13 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe(), new ValidateObjectIdPipe());
 
-  const config = new DocumentBuilder().setTitle('Todos App').build();
+  const config = new DocumentBuilder()
+    .setTitle('Todos App')
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      'bearer',
+    )
+    .build();
 
   const document = SwaggerModule.createDocument(app, config);
   const theme = new SwaggerTheme();

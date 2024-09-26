@@ -6,13 +6,19 @@ import {
 import { UserService } from 'src/user/user.service';
 import { LoginDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/user/user.schema';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UserService,
-    private jwtService: JwtService,
+    private readonly userService: UserService,
+    private readonly jwtService: JwtService,
   ) {}
+
+  async getProfile(request: Request): Promise<User> {
+    return await this.userService.findById(request['user']?.sub);
+  }
 
   async signIn({
     email,
