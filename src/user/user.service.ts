@@ -14,6 +14,12 @@ export class UserService {
     return await this.userModel.find().exec();
   }
 
+  async findOneByEmail(email: string): Promise<UserDocument> {
+    const user = await this.userModel.findOne({ email }).exec();
+    validateDocumentExists(this.userModel, user);
+    return user;
+  }
+
   async findOne(id: string): Promise<UserDocument> {
     const user = await this.userModel.findById(id).exec();
     validateDocumentExists(this.userModel, user);
