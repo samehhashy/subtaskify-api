@@ -13,6 +13,7 @@ export class ValidateObjectIdPipe implements PipeTransform {
     if (type === 'param' && data === 'id' && !isValidObjectId(value)) {
       throw new NotFoundException();
     }
+
     return value;
   }
 }

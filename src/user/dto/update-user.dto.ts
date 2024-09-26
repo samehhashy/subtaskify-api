@@ -1,24 +1,4 @@
-import { IsEmail, IsOptional, IsString } from 'class-validator';
-import { IUser } from '../user.interface';
+import { PartialType } from '@nestjs/swagger';
+import { CreateUserDto } from './create-user.dto';
 
-export class UpdateUserDto implements Partial<IUser> {
-  @IsString()
-  @IsOptional()
-  firstName?: string;
-
-  @IsString()
-  @IsOptional()
-  lastName?: string;
-
-  @IsEmail()
-  @IsOptional()
-  email?: string;
-
-  @IsString()
-  @IsOptional()
-  password?: string;
-
-  @IsString()
-  @IsOptional()
-  avatarUrl?: string;
-}
+export class UpdateUserDto extends PartialType(CreateUserDto) {}
