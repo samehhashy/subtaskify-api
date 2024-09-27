@@ -1,7 +1,7 @@
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 export const createUserDtoStub = (): CreateUserDto => ({
-  email: 'user1@todo.test',
+  email: 'user1@subtaskify.test',
   password: 'test123',
   firstName: 'UserOne',
   lastName: 'TestOne',

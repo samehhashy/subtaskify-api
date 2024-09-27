@@ -11,7 +11,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe(), new ValidateObjectIdPipe());
 
   const config = new DocumentBuilder()
-    .setTitle('Todos App')
+    .setTitle('Subtaskify App API')
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
       'bearer',
