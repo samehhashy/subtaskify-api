@@ -10,20 +10,16 @@ import { Connection, Model } from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
 describe('UserController', () => {
-  let mongod: MongoMemoryServer;
-  let connection: Connection;
+  let server: MongoMemoryServer;
+  let dbConnection: Connection;
   let userController: UserController;
   let userModel: Model<User>;
 
   beforeAll(async () => {
-    const {
-      server,
-      dbConnection: serverConnection,
-      model,
-    } = await setupDB<User>(User.name, UserSchema);
-    mongod = server;
-    connection = serverConnection;
-    userModel = model;
+    const db = await setupDB<User>(User.name, UserSchema);
+    server = db.server;
+    dbConnection = db.connection;
+    userModel = db.model;
 
     const moduleRef = await Test.createTestingModule({
       controllers: [UserController],
@@ -37,11 +33,11 @@ describe('UserController', () => {
   });
 
   afterAll(async () => {
-    await teardownDB(mongod, connection);
+    await teardownDB(server, dbConnection);
   });
 
   afterEach(async () => {
-    await clearDB(connection);
+    await clearDB(dbConnection);
   });
 
   it('should not allow duplicate users to be created', async () => {

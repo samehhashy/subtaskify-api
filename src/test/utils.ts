@@ -1,37 +1,39 @@
+import { getModelToken } from '@nestjs/mongoose';
+import { Test } from '@nestjs/testing';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { connect, Connection, Model, Schema } from 'mongoose';
+
+interface ISetupDB<T> {
+  server: MongoMemoryServer;
+  connection: Connection;
+  model: Model<T>;
+}
 
 export async function setupDB<T>(
   modelName: string,
   schema: Schema<T>,
-): Promise<{
-  server: MongoMemoryServer;
-  dbConnection: Connection;
-  model: Model<T>;
-}> {
+): Promise<ISetupDB<T>> {
   const server = await MongoMemoryServer.create();
-  const uri = server.getUri();
-  const dbConnection = (await connect(uri)).connection;
-  const model = dbConnection.model<T>(modelName, schema);
+  const connection = (await connect(server.getUri())).connection;
 
   return {
     server,
-    dbConnection,
-    model,
+    connection,
+    model: connection.model<T>(modelName, schema),
   };
 }
 
 export async function teardownDB(
   mongod: MongoMemoryServer,
-  mongoConnection: Connection,
+  connection: Connection,
 ) {
-  await mongoConnection.dropDatabase();
-  await mongoConnection.close();
+  await connection.dropDatabase();
+  await connection.close();
   await mongod.stop();
 }
 
-export async function clearDB(mongoConnection: Connection) {
-  const collections = mongoConnection.collections;
+export async function clearDB(connection: Connection) {
+  const collections = connection.collections;
   for (const key in collections) {
     const collection = collections[key];
     await collection.deleteMany({});
