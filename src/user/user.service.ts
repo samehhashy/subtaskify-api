@@ -37,6 +37,7 @@ export class UserService {
       if (error.code === 11000) {
         throw new ConflictException('A user already exists with this email');
       }
+      throw error;
     }
   }
 

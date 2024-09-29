@@ -1,5 +1,6 @@
 import {
   IsEmail,
+  IsNotEmpty,
   IsOptional,
   IsString,
   IsUrl,
@@ -8,21 +9,26 @@ import {
 import { IUser } from '../user.interface';
 
 export class CreateUserDto implements IUser {
-  @IsString()
+  @IsString({ message: 'First name must be a string' })
+  @IsNotEmpty({ message: 'First name is required' })
   firstName: string;
 
-  @IsString()
+  @IsString({ message: 'Last name must be a string' })
+  @IsNotEmpty({ message: 'Last name is required' })
   lastName: string;
 
-  @IsEmail()
+  @IsEmail({}, { message: 'Email is invalid' })
+  @IsNotEmpty({ message: 'Email is required' })
   email: string;
 
-  @IsString()
-  @MinLength(6)
+  @IsString({ message: 'Password must be a string' })
+  @MinLength(6, {
+    message: 'Password must be longer than or equal to 6 characters',
+  })
+  @IsNotEmpty({ message: 'Password is required' })
   password: string;
 
-  @IsString()
   @IsOptional()
-  @IsUrl()
+  @IsUrl({}, { message: 'Avatar must be a valid URL' })
   avatarUrl?: string;
 }
