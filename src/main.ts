@@ -1,30 +1,20 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { ValidateObjectIdPipe } from './common/pipes/validateObjectId.pipe';
-import { SwaggerTheme, SwaggerThemeNameEnum } from 'swagger-themes';
+import { ConfigService } from '@nestjs/config';
+import { setupSwagger } from './common/utils/setup-swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  const configService = app.get(ConfigService);
+
   app.useGlobalPipes(new ValidationPipe(), new ValidateObjectIdPipe());
 
-  const config = new DocumentBuilder()
-    .setTitle('Subtaskify App API')
-    .addBearerAuth(
-      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
-      'bearer',
-    )
-    .build();
+  setupSwagger(app);
 
-  const document = SwaggerModule.createDocument(app, config);
-  const theme = new SwaggerTheme();
-  SwaggerModule.setup('api', app, document, {
-    customCss: theme.getBuffer(SwaggerThemeNameEnum.ONE_DARK),
-  });
-
-  await app.listen(3000);
+  await app.listen(configService.get<number>('PORT'));
 }
 
 bootstrap();

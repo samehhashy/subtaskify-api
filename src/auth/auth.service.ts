@@ -19,7 +19,7 @@ export class AuthService {
   ) {}
 
   async getProfile(request: Request): Promise<User> {
-    return await this.userService.findById(request['user']?.sub);
+    return await this.userService.findById(request['user'].sub);
   }
 
   async login({ email, password }: LoginDto): Promise<AccessTokenDto> {
@@ -34,7 +34,7 @@ export class AuthService {
       return await this.generateAccessToken(user.id, user.email);
     } catch (error) {
       if (error instanceof NotFoundException) {
-        throw new NotFoundException('Email is incorrect');
+        throw new NotFoundException('No user found with this email');
       }
       throw error;
     }
@@ -44,8 +44,7 @@ export class AuthService {
     password,
     ...createUserDto
   }: User): Promise<AccessTokenDto> {
-    const salt = await genSalt();
-    const hashedPassword = await hash(password, salt);
+    const hashedPassword = await hash(password, await genSalt());
     const createdUser = await this.userService.create({
       ...createUserDto,
       password: hashedPassword,

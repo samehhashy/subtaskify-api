@@ -10,7 +10,7 @@ export enum TaskPriority {
   HIGH = 3,
 }
 
-@Schema()
+@Schema({ versionKey: 'version' })
 export class Task {
   @Prop({ required: true, type: Mongoose.Schema.Types.ObjectId, ref: 'User' })
   userId: string;

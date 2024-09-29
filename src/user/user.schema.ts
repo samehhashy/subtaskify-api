@@ -4,7 +4,7 @@ import { HydratedDocument } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 
-@Schema()
+@Schema({ versionKey: false })
 export class User implements IUser {
   @Prop({ required: true })
   firstName: string;
